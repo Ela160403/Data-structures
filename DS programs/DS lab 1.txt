@@ -1,0 +1,101 @@
+write a c program that splits an array into two lists and allocate separate memory spaces for the two lists that are going to be created
+
+1) Split the array into two lists each consisting of the alternate elements 
+2)Remove the duplicate elements in each list.
+3)CHECK THE SIZE OF TWO LISTS FOR EQUALITY And display with justification 
+4)bublle Sort the two lists 
+
+
+
+
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int isDuplicate(int arr[], int length, int num) {
+    for (int i = 0; i < length; i++) {
+        if (arr[i] == num) {
+            return 1; // Indicates that the number is a duplicate
+        }
+    }
+    return 0; // Indicates that the number is not a duplicate
+}
+
+void bubbleSort(int arr[], int length) {
+    for (int i = 0; i < length - 1; i++) {
+        for (int j = 0; j < length - i - 1; j++) {
+            if (arr[j] > arr[j + 1]) {
+                // Swap elements if they are in the wrong order
+                int temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+            }
+        }
+    }
+}
+
+void displayList(int arr[], int length, const char *listName) {
+    printf("\n%s List: ", listName);
+    for (int i = 0; i < length; i++) {
+        printf("%d ", arr[i]);
+    }
+    printf("\n");
+}
+
+int main() {
+    int arr[10] = {1, 2, 3, 4, 5, 1, 2, 6, 7, 8};
+    int length = sizeof(arr) / sizeof(arr[0]);
+
+    int *list1, *list2;
+    int size1 = length / 2; // Assuming the original array has an even length
+    int size2 = length - size1;
+
+    list1 = (int *)malloc(size1 * sizeof(int));
+    list2 = (int *)malloc(size2 * sizeof(int));
+
+    // Split the array into two lists with alternate elements and remove duplicates
+    int index1 = 0, index2 = 0;
+    for (int i = 0; i < length; i++) {
+        if (i % 2 == 0) {
+            if (!isDuplicate(list1, index1, arr[i])) {
+                list1[index1] = arr[i];
+                index1++;
+            }
+        } else {
+            if (!isDuplicate(list2, index2, arr[i])) {
+                list2[index2] = arr[i];
+                index2++;
+            }
+        }
+    }
+
+    // Check the size of two lists for equality
+    if (index1 == index2) {
+        printf("\nSize of two lists is equal.\n");
+    } else {
+        printf("\nSize of two lists is not equal.\n");
+    }
+
+    // Display the original array and the two lists
+    printf("\nOriginal Array: ");
+    for (int i = 0; i < length; i++) {
+        printf("%d ", arr[i]);
+    }
+
+    displayList(list1, index1, "List 1 (After Removing Duplicates)");
+    displayList(list2, index2, "List 2 (After Removing Duplicates)");
+
+    // Bubble Sort the two lists
+    bubbleSort(list1, index1);
+    bubbleSort(list2, index2);
+
+    // Display the sorted lists
+    displayList(list1, index1, "Sorted List 1");
+    displayList(list2, index2, "Sorted List 2");
+
+    // Free allocated memory
+    free(list1);
+    free(list2);
+
+    return 0;
+}
